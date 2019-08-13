@@ -1,0 +1,14 @@
+C:\Users\anjain\source\repos\WebApi\WebApiTests\bin\Debug\netcoreapp2.1\xunit.runner.visualstudio.dotnetcore.testadapter.dll
+C:\Users\anjain\source\repos\WebApi\WebApiTests\bin\Debug\netcoreapp2.1\xunit.runner.reporters.netcoreapp10.dll
+C:\Users\anjain\source\repos\WebApi\WebApiTests\bin\Debug\netcoreapp2.1\xunit.runner.utility.netcoreapp10.dll
+C:\Users\anjain\source\repos\WebApi\WebApiTests\bin\Debug\netcoreapp2.1\WebApiTests.deps.json
+C:\Users\anjain\source\repos\WebApi\WebApiTests\bin\Debug\netcoreapp2.1\WebApiTests.runtimeconfig.json
+C:\Users\anjain\source\repos\WebApi\WebApiTests\bin\Debug\netcoreapp2.1\WebApiTests.runtimeconfig.dev.json
+C:\Users\anjain\source\repos\WebApi\WebApiTests\bin\Debug\netcoreapp2.1\WebApiTests.dll
+C:\Users\anjain\source\repos\WebApi\WebApiTests\bin\Debug\netcoreapp2.1\WebApi.dll
+C:\Users\anjain\source\repos\WebApi\WebApiTests\bin\Debug\netcoreapp2.1\WebApi.pdb
+C:\Users\anjain\source\repos\WebApi\WebApiTests\obj\Debug\netcoreapp2.1\WebApiTests.csprojAssemblyReference.cache
+C:\Users\anjain\source\repos\WebApi\WebApiTests\obj\Debug\netcoreapp2.1\WebApiTests.csproj.CoreCompileInputs.cache
+C:\Users\anjain\source\repos\WebApi\WebApiTests\obj\Debug\netcoreapp2.1\WebApiTests.AssemblyInfoInputs.cache
+C:\Users\anjain\source\repos\WebApi\WebApiTests\obj\Debug\netcoreapp2.1\WebApiTests.AssemblyInfo.cs
+C:\Users\anjain\source\repos\WebApi\WebApiTests\obj\Debug\netcoreapp2.1\WebApiTests.csproj.CopyComplete
