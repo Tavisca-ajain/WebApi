@@ -42,7 +42,7 @@ pipeline{
         expression {params.CHOSEN_ACTION=='PUBLISH'}
       }
       steps{
-        powershell 'dotnet publish WebApplicationHi/WebApplicationHi.csproj'
+        powershell 'dotnet publish WebApi/WebApi.csproj'
       }
     }
   }
