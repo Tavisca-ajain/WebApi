@@ -79,8 +79,8 @@ pipeline{
             }
             steps {
                 script{
-                //powershell 'mkdir archive'
-                zip zipFile: 'publish.zip', archive: false, dir: 'C:\Users\anjain\source\repos\WebApi\WebApi\bin\Debug\netcoreapp2.1\publish'
+                
+                zip zipFile: 'publish.zip', archive: false, dir: 'C:\Users\anjain\source\repos\WebApi\WebApi\bin\Debug\netcoreapp2.1'
                 archiveArtifacts artifacts: 'publish.zip', fingerprint: true
                 }
             }
