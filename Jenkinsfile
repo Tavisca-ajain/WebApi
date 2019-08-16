@@ -78,9 +78,11 @@ pipeline{
                 expression{params.RELEASE_ENVIRONMENT == "Publish"}
             }
             steps {
+                script{
                 powershell 'mkdir archive'
                 zip zipFile: 'publish.zip', archive: false, dir: 'archive'
                 archiveArtifacts artifacts: 'publish.zip', fingerprint: true
+                }
             }
         }
     }
