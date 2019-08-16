@@ -40,9 +40,9 @@ pipeline{
             }
             steps{
                 powershell '''
-                    echo '====================Build Project Start ================'
+                    echo '====================Restore Project Start ================'
                     dotnet restore ${SOLUTION_PATH} --source https://api.nuget.org/v3/index.json
-                    echo '=====================Build Project Completed============'
+                    echo '=====================Restore Project Completed============'
                     echo '====================Build Project Start ================'
                     dotnet build ${PPOJECT_PATH} 
                     echo '=====================Build Project Completed============'
@@ -55,9 +55,9 @@ pipeline{
             }
             steps{
                 powershell '''
-                    echo '====================Build Project Start ================'
+                    echo '====================Test Project Start ================'
                     dotnet test ${TEST_SOLUTION_PATH}
-                    echo '=====================Build Project Completed============'
+                    echo '=====================Test Project Completed============'
                 '''
             }
         }
@@ -67,9 +67,9 @@ pipeline{
             }
             steps{
                 powershell '''
-                    echo '====================Build Project Start ================'
+                    echo '====================Publish Project Start ================'
                     dotnet publish ${PROJECT_PATH}
-                    echo '=====================Build Project Completed============'
+                    echo '=====================Publish Project Completed============'
                 '''
             }
         }
@@ -79,8 +79,8 @@ pipeline{
             }
             steps {
                 script{
-                powershell 'mkdir archive'
-                zip zipFile: 'publish.zip', archive: false, dir: 'archive'
+                //powershell 'mkdir archive'
+                zip zipFile: 'publish.zip', archive: false, dir: 'C:\Users\anjain\source\repos\WebApi\WebApi\bin\Debug\netcoreapp2.1\publish'
                 archiveArtifacts artifacts: 'publish.zip', fingerprint: true
                 }
             }
