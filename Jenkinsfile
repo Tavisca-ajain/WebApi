@@ -80,7 +80,7 @@ pipeline{
             steps {
                 script{
                 
-                zip zipFile: 'publish.zip', archive: false, dir: 'C:\Users\anjain\source\repos\WebApi\WebApi\bin\Debug\netcoreapp2.1'
+                zip zipFile: 'publish.zip', archive: false, dir: 'WebApi\bin\Debug\netcoreapp2.1'
                 archiveArtifacts artifacts: 'publish.zip', fingerprint: true
                 }
             }
