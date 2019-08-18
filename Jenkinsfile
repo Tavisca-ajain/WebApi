@@ -27,16 +27,32 @@ pipeline{
             defaultValue: "WebApi/WebApi.csproj",
             description: "PROJECT PATH"
         )
+         string(
+            name: "DOCKERHUB_USER_NAME",
+            description: "Enter Docker hub Username"
+        )
+        string(
+            name: "DOCKERHUB_PASSWORD",
+            description:  "Enter Docker hub Password"
+        )
+        string(
+            name: "DOCKERHUB_REPO",
+            defaultValue: "WebApi"
+        )
+        string(
+            name: "SOLUTION_DLL_FILE",
+            defaultValue: "WebApi.dll",
+        )
         choice(
             name: "RELEASE_ENVIRONMENT",
-            choices: ["Build","Test", "Publish"],
-            description: "Choose which operation to complete"
+            choices: ["Build","Deploy"],
+            description: "Choose the operation"
         )
     }
     stages{
         stage('Build'){
             when{
-                expression{params.RELEASE_ENVIRONMENT == "Build" || params.RELEASE_ENVIRONMENT == "Test" || params.RELEASE_ENVIRONMENT == "Publish"}
+                expression{params.RELEASE_ENVIRONMENT == "Build" || params.RELEASE_ENVIRONMENT == "Deploy" }
             }
             steps{
                 powershell '''
@@ -46,46 +62,32 @@ pipeline{
                     echo '====================Build Project Start ================'
                     dotnet build ${PPOJECT_PATH} 
                     echo '=====================Build Project Completed============'
-                '''
-            }
-        }
-        stage('Test'){
-            when{
-                expression{params.RELEASE_ENVIRONMENT == "Test" || params.RELEASE_ENVIRONMENT == "Publish"}
-            }
-            steps{
-                powershell '''
                     echo '====================Test Project Start ================'
                     dotnet test ${TEST_SOLUTION_PATH}
                     echo '=====================Test Project Completed============'
+                    echo '====================Publish Start ================'
+                    dotnet publish ${PROJECT_PATH}
+                    echo '=====================Publish Completed============'
                 '''
             }
         }
-        stage('Publish'){
+        stage('Deploy'){
             when{
-                expression{params.RELEASE_ENVIRONMENT == "Publish"}
+                expression{params.RELEASE_ENVIRONMENT == "Deploy"}
             }
             steps{
-                powershell '''
-                    echo '====================Publish Project Start ================'
-                    dotnet publish ${PROJECT_PATH}
-                    echo '=====================Publish Project Completed============'
-                '''
-            }
-        }
-        stage ('push artifact') {
-            when{
-                expression{params.RELEASE_ENVIRONMENT == "Publish"}
-            }
-            steps {
-                script{
+                writeFile file: 
+                        'WebApi/bin/Debug/netcoreapp2.1/publish/Dockerfile', text: '''
+                        FROM mcr.microsoft.com/dotnet/core/aspnet\n
+                        ENV NAME ${DOCKER_REPO}\n
+                        CMD ["dotnet", "${SOLUTION_DLL_FILE}"]\n'''
                 
-                zip zipFile: 'publish.zip', archive: false, dir: 'WebApi/bin/Debug/netcoreapp2.1'
-                archiveArtifacts artifacts: 'publish.zip', fingerprint: true
-                }
-            }
+                powershell "docker build WebApi/bin/Debug/netcoreapp2.2/publish/ --tag=${DOCKER_REPO}:${BUILD_NUMBER}"    
+                powershell "docker tag ${DOCKER_REPO}:${BUILD_NUMBER} ${DOCKER_USER_NAME}/${DOCKER_REPO}:${BUILD_NUMBER}"
+                powershell "docker push ${DOCKER_USER_NAME}/${DOCKER_REPO}:${BUILD_NUMBER}"
         }
     }
+}
     post{
         always{
             deleteDir()
