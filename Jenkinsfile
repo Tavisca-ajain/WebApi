@@ -28,6 +28,10 @@ pipeline{
             description: "PROJECT PATH"
         )
          string(
+            name: "DOCKERFILE",
+            defaultValue: "mcr.microsoft.com/dotnet/core/aspnet",
+        )
+         string(
             name: "DOCKERHUB_USER_NAME",
             description: "Enter Docker hub Username"
         )
@@ -84,6 +88,7 @@ pipeline{
                 
                 powershell "docker build WebApi/bin/Debug/netcoreapp2.2/publish/ --tag=${DOCKER_REPO}:${BUILD_NUMBER}"    
                 powershell "docker tag ${DOCKER_REPO}:${BUILD_NUMBER} ${DOCKER_USER_NAME}/${DOCKER_REPO}:${BUILD_NUMBER}"
+                powershell "docker login -u ${DOCKER_USER_NAME} -p ${DOCKER_PASSWORD}" 
                 powershell "docker push ${DOCKER_USER_NAME}/${DOCKER_REPO}:${BUILD_NUMBER}"
         }
     }
