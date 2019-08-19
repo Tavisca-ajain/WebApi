@@ -12,3 +12,6 @@ C:\Users\anjain\source\repos\WebApi\WebApiTests\obj\Debug\netcoreapp2.1\WebApiTe
 C:\Users\anjain\source\repos\WebApi\WebApiTests\obj\Debug\netcoreapp2.1\WebApiTests.AssemblyInfoInputs.cache
 C:\Users\anjain\source\repos\WebApi\WebApiTests\obj\Debug\netcoreapp2.1\WebApiTests.AssemblyInfo.cs
 C:\Users\anjain\source\repos\WebApi\WebApiTests\obj\Debug\netcoreapp2.1\WebApiTests.csproj.CopyComplete
+C:\Users\anjain\source\repos\WebApi\WebApiTests\bin\Debug\netcoreapp2.1\WebApiTests.pdb
+C:\Users\anjain\source\repos\WebApi\WebApiTests\obj\Debug\netcoreapp2.1\WebApiTests.dll
+C:\Users\anjain\source\repos\WebApi\WebApiTests\obj\Debug\netcoreapp2.1\WebApiTests.pdb

@@ -1,10 +1,14 @@
-pipeline{
+    pipeline{
     agent { label 'master' }
     parameters{
         string(
             name: "GIT_HTTPS_PATH",
             defaultValue: "https://github.com/Tavisca-ajain/WebApi.git",
             description: "GIT HTTPS PATH"
+        )
+        string(
+            name: "PROJECT_NAME",
+            defaultValue: "WebApi"
         )
         string(
             name: "SOLUTION_PATH",
@@ -25,77 +29,74 @@ pipeline{
         string(
             name: "PROJECT_PATH",
             defaultValue: "WebApi/WebApi.csproj",
-            description: "PROJECT PATH"
         )
          string(
             name: "DOCKERFILE",
             defaultValue: "mcr.microsoft.com/dotnet/core/aspnet",
         )
          string(
-            name: "DOCKERHUB_USER_NAME",
+            name: "ENV_NAME",
+            defaultValue: "Api",
+        )
+         string(
+            name: "SOLUTION_DLL_FILE",
+            defaultValue: "WebApi.dll",
+        )
+        string(
+            name: "DOCKER_USER_NAME",
+            defaultValue: '',
             description: "Enter Docker hub Username"
         )
         string(
-            name: "DOCKERHUB_PASSWORD",
+            name: "DOCKER_PASSWORD",
+             defaultValue: '',
             description:  "Enter Docker hub Password"
         )
         string(
-            name: "DOCKERHUB_REPO",
-            defaultValue: "webApi"
-        )
-        string(
-            name: "SOLUTION_DLL_FILE",
-            defaultValue: "WebApi.dll",
+            name: 'SONAR_PROJECT_TOKEN',
+            defaultValue: '', 
+            description: 'Path to the Solution'
         )
         choice(
             name: "RELEASE_ENVIRONMENT",
             choices: ["Build","Deploy"],
-            description: "Choose the operation"
+            description: "Tick what you want to do"
         )
     }
     stages{
         stage('Build'){
             when{
-                expression{params.RELEASE_ENVIRONMENT == "Build" || params.RELEASE_ENVIRONMENT == "Deploy" }
+                expression{params.RELEASE_ENVIRONMENT == "Build" || params.RELEASE_ENVIRONMENT == "Deploy"}
             }
             steps{
-                powershell '''
-                    echo '====================Restore Project Start ================'
-                    dotnet restore ${SOLUTION_PATH} --source https://api.nuget.org/v3/index.json
-                    echo '=====================Restore Project Completed============'
-                    echo '====================Build Project Start ================'
-                    dotnet build ${PPOJECT_PATH} 
-                    echo '=====================Build Project Completed============'
-                    echo '====================Test Project Start ================'
-                    dotnet test ${TEST_SOLUTION_PATH}
-                    echo '=====================Test Project Completed============'
-                    echo '====================Publish Start ================'
-                    dotnet publish ${PROJECT_PATH}
-                    echo '=====================Publish Completed============'
+                bat '''
+                echo "----------------------------Build Project Started-----------------------------"
+                echo "Helllo"
+				dotnet "C:/Program Files (x86)/Jenkins/sonar/SonarScanner.MSBuild.dll" begin /k:"api" /d:sonar.host.url="http://localhost:9000" /d:sonar.login="%SONAR_PROJECT_TOKEN%"
+				dotnet build %SOLUTION_PATH% -p:Configuration=release -v:q
+				echo "----------------------------Build Project Completed-----------------------------"
+				echo "----------------------------Test Project Started-----------------------------"
+				dotnet test %TEST_SOLUTION_PATH%
+				echo "----------------------------Test Project Completed-----------------------------"
+				dotnet "C:/Program Files (x86)/Jenkins/sonar/SonarScanner.MSBuild.dll" end /d:sonar.login="%SONAR_PROJECT_TOKEN%"
+                echo '====================Publish Start ================'
+                dotnet publish %SOLUTION_PATH% -c Release -o ../publish
+                echo '=====================Publish Completed============'
                 '''
             }
         }
-        stage('Deploy'){
+        stage ('Creating Docker Image') {
             when{
                 expression{params.RELEASE_ENVIRONMENT == "Deploy"}
             }
-            steps{
-                writeFile file: 
-                        'WebApi/bin/Debug/netcoreapp2.1/publish/Dockerfile', text: '''
-                        FROM mcr.microsoft.com/dotnet/core/aspnet\n
-                        ENV NAME ${DOCKERHUB_REPO}\n
-                        CMD ["dotnet", "${SOLUTION_DLL_FILE}"]\n'''
-                
-                powershell "docker build WebApi/bin/Debug/netcoreapp2.2/publish/ --tag=${DOCKERHUB_REPO}:${BUILD_NUMBER}"    
-                powershell "docker tag ${DOCKERHUB_REPO}:${BUILD_NUMBER} ${DOCKER_USER_NAME}/${DOCKERHUB_REPO}:${BUILD_NUMBER}"
+            steps {
+                powershell "Copy-Item build API/bin/Debug/netcoreapp2.1/publish/* infra/docker/ -Recurse"
+                powershell "docker build  infra/docker/ --tag=${Project_Name}:${BUILD_NUMBER}"    
+                powershell "docker tag ${PROJECT_NAME}:${BUILD_NUMBER} ${DOCKER_USER_NAME}/${PROJECT_NAME}:${BUILD_NUMBER}"
                 powershell "docker login -u ${DOCKER_USER_NAME} -p ${DOCKER_PASSWORD}" 
-                powershell "docker push ${DOCKER_USER_NAME}/${DOCKERHUB_REPO}:${BUILD_NUMBER}"
+                powershell "docker push ${DOCKER_USER_NAME}/${PROJECT_NAME}:${BUILD_NUMBER}"
+            }
         }
     }
-}
-    post{
-        always{
-            deleteDir()
-       }
-    }
+    
 }
