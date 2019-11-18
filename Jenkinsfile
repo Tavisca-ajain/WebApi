@@ -41,7 +41,7 @@ pipeline{
         )
         string(
             name: "DOCKERHUB_REPO",
-            defaultValue: "webApi"
+            defaultValue: "webapi"
         )
         string(
             name: "SOLUTION_DLL_FILE",
